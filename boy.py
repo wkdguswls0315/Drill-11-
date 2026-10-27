@@ -62,6 +62,9 @@ class Boy:
         elif self.state == 'RUN':
             self.move_horizontally()
             self.frame = (self.frame + 1) % 8
+        elif self.state == 'AUTORUN':
+            self.x += self.face_dir * MOVE_SPEED
+            self.frame = (self.frame + 1) % 8
 
     def move_horizontally(self):
         moving_left = SDLK_LEFT in self.keys_down
@@ -134,7 +137,7 @@ class Boy:
             )
             return
 
-        if self.state == 'RUN':
+        if self.state in ('RUN', 'AUTORUN'):
             bottom = 100 if self.face_dir == 1 else 0
         else:
             bottom = 300 if self.face_dir == 1 else 200
