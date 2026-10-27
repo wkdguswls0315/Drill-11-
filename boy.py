@@ -7,6 +7,7 @@ from pico2d import (
     SDLK_LEFT,
     SDLK_RIGHT,
     SDLK_SPACE,
+    SDLK_a,
     load_image,
 )
 from transitions import Machine
@@ -25,10 +26,11 @@ class Boy:
         self.idle_started_at = time.monotonic()
         self.keys_down = set()
         self.image = load_image('animation_sheet.png')
-        states = ['IDLE', 'RUN', 'SLEEP']
+        states = ['IDLE', 'RUN', 'SLEEP', 'AUTORUN']
         transitions = [
             {'trigger': 'fall_asleep', 'source': 'IDLE', 'dest': 'SLEEP'},
             {'trigger': 'start_running', 'source': 'IDLE', 'dest': 'RUN'},
+            {'trigger': 'start_auto_run', 'source': 'IDLE', 'dest': 'AUTORUN'},
             {'trigger': 'wake_and_run', 'source': 'SLEEP', 'dest': 'RUN'},
             {
                 'trigger': 'stop_running',
@@ -94,6 +96,11 @@ class Boy:
         if event.key == SDLK_SPACE:
             if self.state == 'SLEEP':
                 self.wake_up()
+            return
+
+        if event.key == SDLK_a:
+            if self.state == 'IDLE':
+                self.start_auto_run()
             return
 
         if event.key not in (SDLK_LEFT, SDLK_RIGHT):
