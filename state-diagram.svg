@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="570" viewBox="0 0 1000 570" role="img" aria-labelledby="title description">
+  <title id="title">Boy AutoRun state diagram</title>
+  <desc id="description">IDLE enters AUTORUN when A is pressed. AUTORUN returns to IDLE after five seconds, or enters RUN when a direction key is pressed. RUN returns to IDLE when direction keys are released. AUTORUN reverses at screen edges.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <style>
+      .state { fill: #eef6ff; stroke: #2563eb; stroke-width: 3; }
+      .label { font: 700 25px "Segoe UI", sans-serif; fill: #0f172a; text-anchor: middle; }
+      .transition { fill: none; stroke: #334155; stroke-width: 3; marker-end: url(#arrow); }
+      .event { font: 18px "Segoe UI", sans-serif; fill: #334155; text-anchor: middle; }
+      .note { font: 17px "Segoe UI", sans-serif; fill: #475569; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="1000" height="570" rx="18" fill="#ffffff"/>
+  <text x="500" y="52" class="label">Drill #11 - Boy AutoRun</text>
+
+  <rect x="95" y="220" width="190" height="90" rx="18" class="state"/>
+  <text x="190" y="275" class="label">IDLE</text>
+  <rect x="405" y="220" width="210" height="90" rx="18" class="state"/>
+  <text x="510" y="275" class="label">AUTORUN</text>
+  <rect x="725" y="220" width="180" height="90" rx="18" class="state"/>
+  <text x="815" y="275" class="label">RUN</text>
+
+  <path d="M285 245 C330 190, 355 190, 405 245" class="transition"/>
+  <text x="345" y="178" class="event">A key</text>
+
+  <path d="M405 285 C360 350, 330 350, 285 285" class="transition"/>
+  <text x="345" y="384" class="event">5 seconds</text>
+
+  <path d="M615 245 C655 190, 680 190, 725 245" class="transition"/>
+  <text x="670" y="178" class="event">left / right key</text>
+
+  <path d="M725 285 C680 350, 655 350, 615 285" class="transition"/>
+  <text x="670" y="384" class="event">release direction keys</text>
+
+  <path d="M455 220 C410 120, 610 120, 565 220" class="transition"/>
+  <text x="510" y="132" class="event">screen edge: reverse direction</text>
+
+  <text x="500" y="540" class="note">AUTORUN is faster and larger than normal RUN.</text>
+</svg>
