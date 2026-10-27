@@ -16,6 +16,8 @@ SCREEN_WIDTH = 800
 CHARACTER_WIDTH = 100
 SLEEP_Y = 77
 MOVE_SPEED = 5
+AUTO_RUN_SPEED = MOVE_SPEED * 2
+AUTO_RUN_SIZE = 150
 
 
 class Boy:
@@ -63,7 +65,7 @@ class Boy:
             self.move_horizontally()
             self.frame = (self.frame + 1) % 8
         elif self.state == 'AUTORUN':
-            self.x += self.face_dir * MOVE_SPEED
+            self.x += self.face_dir * AUTO_RUN_SPEED
             self.frame = (self.frame + 1) % 8
 
     def move_horizontally(self):
@@ -141,6 +143,18 @@ class Boy:
             bottom = 100 if self.face_dir == 1 else 0
         else:
             bottom = 300 if self.face_dir == 1 else 200
-        self.image.clip_draw(
-            self.frame * 100, bottom, 100, 100, self.x, self.y
-        )
+        if self.state == 'AUTORUN':
+            self.image.clip_draw(
+                self.frame * 100,
+                bottom,
+                100,
+                100,
+                self.x,
+                self.y,
+                AUTO_RUN_SIZE,
+                AUTO_RUN_SIZE,
+            )
+        else:
+            self.image.clip_draw(
+                self.frame * 100, bottom, 100, 100, self.x, self.y
+            )
