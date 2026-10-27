@@ -70,11 +70,27 @@ class BoyRunTests(unittest.TestCase):
         )
         self.assertEqual(self.character.face_dir, -1)
 
+        self.character.x = boy.AUTO_RUN_SIZE // 2 + 1
+        self.character.update()
+        self.assertEqual(self.character.x, boy.AUTO_RUN_SIZE // 2)
+        self.assertEqual(self.character.face_dir, 1)
+
         self.character.draw()
         self.assertEqual(
             self.character.image.draw_calls[-1][-2:],
             (boy.AUTO_RUN_SIZE, boy.AUTO_RUN_SIZE),
         )
+
+    def test_direction_key_interrupts_autorun_and_starts_normal_run(self):
+        self.send_key(boy.SDL_KEYDOWN, boy.SDLK_a)
+        self.send_key(boy.SDL_KEYDOWN, boy.SDLK_LEFT)
+        self.assertEqual(self.character.state, 'RUN')
+        self.assertEqual(self.character.face_dir, -1)
+
+        self.character.update()
+        self.assertEqual(self.character.x, 400 - boy.MOVE_SPEED)
+        self.send_key(boy.SDL_KEYUP, boy.SDLK_LEFT)
+        self.assertEqual(self.character.state, 'IDLE')
 
     def test_autorun_returns_to_idle_after_five_seconds(self):
         clock = SimpleNamespace(now=100.0)
