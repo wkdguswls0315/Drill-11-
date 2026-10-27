@@ -65,7 +65,16 @@ class Boy:
             self.move_horizontally()
             self.frame = (self.frame + 1) % 8
         elif self.state == 'AUTORUN':
-            self.x += self.face_dir * AUTO_RUN_SPEED
+            next_x = self.x + self.face_dir * AUTO_RUN_SPEED
+            half_width = AUTO_RUN_SIZE // 2
+            if next_x <= half_width:
+                self.x = half_width
+                self.face_dir = 1
+            elif next_x >= SCREEN_WIDTH - half_width:
+                self.x = SCREEN_WIDTH - half_width
+                self.face_dir = -1
+            else:
+                self.x = next_x
             self.frame = (self.frame + 1) % 8
 
     def move_horizontally(self):
