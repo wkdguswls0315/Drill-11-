@@ -1,52 +1,43 @@
-# Drill #11 - Boy AutoRun
+# Drill #11 - 소년 자동 무적 런(AutoRun)
 
-## Overview
+## 개요
 
-Add an automatic, temporarily invulnerable run mode to the boy character. The
-feature is activated from `IDLE` and is implemented by a dedicated `AutoRun`
-state class.
+소년 캐릭터가 일정 시간 동안 자동으로 달리는 무적 런 모드를 추가한다.
+이 기능은 `IDLE` 상태에서 시작하며, 별도의 `AutoRun` 상태 클래스로 구현한다.
 
-## Requirements
+## 요구사항
 
-1. Pressing `A` while the boy is in `IDLE` enters `AUTORUN`.
-2. In `AUTORUN`, the boy moves continuously without directional input.
-3. The boy moves faster and is drawn larger in `AUTORUN` than in normal `RUN`.
-4. At either horizontal screen edge, `AUTORUN` reverses direction and keeps
-   moving within the screen.
-5. After five seconds in `AUTORUN`, the boy returns to `IDLE`.
-6. Pressing a left or right arrow during `AUTORUN` cancels automatic running
-   and enters normal `RUN` in the pressed direction.
-7. Normal `RUN` moves in the direction held by the player and returns to
-   `IDLE` when neither horizontal direction key is held.
-8. Add an `AutoRun` state class; do not implement this feature as only a
-   direction-key check in the game loop.
-9. Include the state diagram image in the submitted repository.
+1. `IDLE` 상태에서 `A` 키를 누르면 `AUTORUN` 상태로 전환한다.
+2. `AUTORUN` 상태에서는 방향키 입력 없이 자동으로 계속 이동한다.
+3. `AUTORUN` 상태의 이동 속도와 캐릭터 크기는 일반 `RUN` 상태보다 커야 한다.
+4. 화면의 좌우 끝에 도달하면 자동으로 방향을 바꾸고 화면 안에서 계속 이동한다.
+5. `AUTORUN` 상태가 5초 이상 지속되면 `IDLE` 상태로 돌아간다.
+6. `AUTORUN` 상태에서 왼쪽 또는 오른쪽 방향키를 누르면 자동 런을 취소하고, 누른 방향으로 일반 `RUN` 상태에 진입한다.
+7. 일반 `RUN` 상태에서는 누르고 있는 방향키 방향으로 이동하며, 좌우 방향키를 모두 놓으면 `IDLE` 상태로 돌아간다.
+8. 게임 루프에서 방향키 입력만 검사하는 방식이 아니라 `AutoRun` 상태 클래스를 추가해 구현한다.
+9. 상태 다이어그램을 이미지 파일로 저장해 제출물에 포함한다.
 
-## State and Input Design
+## 상태 및 입력 설계
 
-- `IDLE` + `A` -> `AUTORUN`
-- `IDLE` + left/right arrow -> `RUN`
-- `RUN` + release all horizontal direction keys -> `IDLE`
-- `AUTORUN` + five seconds elapsed -> `IDLE`
-- `AUTORUN` + left/right arrow -> `RUN` in the pressed direction
-- `AUTORUN` reaching either screen edge -> reverse direction and remain in
-  `AUTORUN`
+- `IDLE`에서 `A` 키 입력: `AUTORUN`으로 전환
+- `IDLE`에서 좌우 방향키 입력: `RUN`으로 전환
+- `RUN`에서 좌우 방향키를 모두 놓음: `IDLE`로 전환
+- `AUTORUN`에서 5초 경과: `IDLE`로 전환
+- `AUTORUN`에서 좌우 방향키 입력: 입력한 방향의 `RUN`으로 전환
+- `AUTORUN`에서 화면 끝 도달: 방향을 바꾸고 `AUTORUN` 유지
 
-The existing controller's other behavior is retained unless it conflicts with
-these requirements.
+기존 캐릭터 컨트롤러의 동작은 과제 요구사항과 충돌하지 않는 한 유지한다.
 
-## Acceptance Criteria
+## 완료 기준
 
-- `A` starts automatic movement only from `IDLE`.
-- Automatic movement needs no held direction key.
-- AutoRun speed is greater than normal Run speed and its rendered size is
-  larger than normal.
-- AutoRun reverses at both screen edges without moving off-screen.
-- AutoRun ends after five seconds and returns to `IDLE`.
-- A direction key interrupts AutoRun and starts normal `RUN` toward that side.
-- The state diagram is present as an image file and linked below.
+- `IDLE` 상태에서 `A` 키를 누르면 자동 이동이 시작된다.
+- 자동 이동 중 방향키를 누르지 않아도 캐릭터가 움직인다.
+- `AUTORUN`의 이동 속도와 그려지는 크기가 일반 `RUN`보다 크다.
+- 화면의 좌우 끝에서 화면 밖으로 나가지 않고 이동 방향이 바뀐다.
+- `AUTORUN`이 5초 후 종료되고 `IDLE`로 돌아간다.
+- 자동 런 도중 방향키를 누르면 해당 방향으로 일반 `RUN`을 시작한다.
+- 상태 다이어그램이 이미지 파일로 저장되어 저장소에 포함된다.
 
-## State Diagram
+## 상태 다이어그램
 
-![Boy AutoRun state diagram](state-diagram.svg)
-
+![소년 AutoRun 상태 다이어그램](state-diagram.svg)
