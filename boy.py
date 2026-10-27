@@ -46,6 +46,11 @@ class Boy:
                 'dest': 'IDLE',
                 'after': 'reset_idle_timer',
             },
+            {
+                'trigger': 'interrupt_auto_run',
+                'source': 'AUTORUN',
+                'dest': 'RUN',
+            },
             {'trigger': 'wake_and_run', 'source': 'SLEEP', 'dest': 'RUN'},
             {
                 'trigger': 'stop_running',
@@ -153,6 +158,8 @@ class Boy:
             self.face_dir = 1
         if self.state == 'IDLE':
             self.start_running()
+        elif self.state == 'AUTORUN':
+            self.interrupt_auto_run()
 
     def reset_idle_timer(self):
         self.idle_started_at = time.monotonic()
