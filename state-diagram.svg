@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="570" viewBox="0 0 1000 570" role="img" aria-labelledby="title description">
   <title id="title">Boy AutoRun state diagram</title>
-  <desc id="description">IDLE enters AUTORUN when A is pressed. The AutoRun state moves faster and is drawn larger, reverses direction at screen edges, returns to IDLE after five seconds, or enters normal RUN when a direction key is pressed. RUN returns to IDLE when direction keys are released.</desc>
+  <desc id="description">IDLE에서 A 키를 누르면 AUTORUN으로 전환합니다. AUTORUN은 더 빠르고 크게 표시되며 화면 끝에서 방향을 바꾸고 5초 후 IDLE로 돌아가거나 방향키 입력 시 일반 RUN으로 전환합니다. RUN은 방향키를 놓으면 IDLE로 돌아갑니다.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
@@ -24,19 +24,19 @@
   <text x="815" y="275" class="label">RUN</text>
 
   <path d="M285 245 C330 190, 355 190, 405 245" class="transition"/>
-  <text x="345" y="178" class="event">A key</text>
+  <text x="345" y="178" class="event">A 키 입력</text>
 
   <path d="M405 285 C360 350, 330 350, 285 285" class="transition"/>
-  <text x="345" y="384" class="event">5 seconds</text>
+  <text x="345" y="384" class="event">5초 경과</text>
 
   <path d="M615 245 C655 190, 680 190, 725 245" class="transition"/>
-  <text x="670" y="178" class="event">left / right key</text>
+  <text x="670" y="178" class="event">좌 / 우 방향키</text>
 
   <path d="M725 285 C680 350, 655 350, 615 285" class="transition"/>
-  <text x="670" y="384" class="event">release direction keys</text>
+  <text x="670" y="384" class="event">방향키를 놓음</text>
 
   <path d="M455 220 C410 120, 610 120, 565 220" class="transition"/>
-  <text x="510" y="132" class="event">screen edge: reverse direction</text>
+  <text x="510" y="132" class="event">화면 끝에서 방향 전환</text>
 
-  <text x="500" y="540" class="note">AutoRun state class: faster and larger than normal RUN; duration 5 seconds.</text>
+  <text x="500" y="540" class="note">AUTORUN 클래스: 일반 RUN보다 빠르고 크게 표시, 5초간 유지</text>
 </svg>
