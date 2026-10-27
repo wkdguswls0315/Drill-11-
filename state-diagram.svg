@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="570" viewBox="0 0 1000 570" role="img" aria-labelledby="title description">
   <title id="title">Boy AutoRun state diagram</title>
-  <desc id="description">IDLE enters AUTORUN when A is pressed. AUTORUN returns to IDLE after five seconds, or enters RUN when a direction key is pressed. RUN returns to IDLE when direction keys are released. AUTORUN reverses at screen edges.</desc>
+  <desc id="description">IDLE enters AUTORUN when A is pressed. The AutoRun state moves faster and is drawn larger, reverses direction at screen edges, returns to IDLE after five seconds, or enters normal RUN when a direction key is pressed. RUN returns to IDLE when direction keys are released.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
@@ -38,5 +38,5 @@
   <path d="M455 220 C410 120, 610 120, 565 220" class="transition"/>
   <text x="510" y="132" class="event">screen edge: reverse direction</text>
 
-  <text x="500" y="540" class="note">AUTORUN is faster and larger than normal RUN.</text>
+  <text x="500" y="540" class="note">AutoRun state class: faster and larger than normal RUN; duration 5 seconds.</text>
 </svg>

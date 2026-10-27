@@ -61,6 +61,14 @@ class BoyRunTests(unittest.TestCase):
         self.send_key(boy.SDL_KEYDOWN, boy.SDLK_a)
         self.assertIsInstance(self.character.auto_run, boy.AutoRun)
         self.assertEqual(self.character.state, 'AUTORUN')
+        start_x = self.character.x
+        self.character.update()
+        self.assertEqual(
+            self.character.x,
+            start_x + boy.AUTO_RUN_SPEED,
+        )
+        self.assertGreater(boy.AUTO_RUN_SPEED, boy.MOVE_SPEED)
+        self.assertGreater(boy.AUTO_RUN_SIZE, boy.CHARACTER_WIDTH)
 
         self.character.x = 721
         self.character.update()
