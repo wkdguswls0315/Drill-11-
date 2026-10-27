@@ -18,6 +18,7 @@ SLEEP_Y = 77
 MOVE_SPEED = 5
 AUTO_RUN_SPEED = MOVE_SPEED * 2
 AUTO_RUN_SIZE = 150
+AUTO_RUN_DURATION = 5
 
 
 class Boy:
@@ -26,13 +27,25 @@ class Boy:
         self.frame = 0
         self.face_dir = 1
         self.idle_started_at = time.monotonic()
+        self.auto_run_started_at = None
         self.keys_down = set()
         self.image = load_image('animation_sheet.png')
         states = ['IDLE', 'RUN', 'SLEEP', 'AUTORUN']
         transitions = [
             {'trigger': 'fall_asleep', 'source': 'IDLE', 'dest': 'SLEEP'},
             {'trigger': 'start_running', 'source': 'IDLE', 'dest': 'RUN'},
-            {'trigger': 'start_auto_run', 'source': 'IDLE', 'dest': 'AUTORUN'},
+            {
+                'trigger': 'start_auto_run',
+                'source': 'IDLE',
+                'dest': 'AUTORUN',
+                'after': 'begin_auto_run',
+            },
+            {
+                'trigger': 'end_auto_run',
+                'source': 'AUTORUN',
+                'dest': 'IDLE',
+                'after': 'reset_idle_timer',
+            },
             {'trigger': 'wake_and_run', 'source': 'SLEEP', 'dest': 'RUN'},
             {
                 'trigger': 'stop_running',
@@ -65,6 +78,10 @@ class Boy:
             self.move_horizontally()
             self.frame = (self.frame + 1) % 8
         elif self.state == 'AUTORUN':
+            if time.monotonic() - self.auto_run_started_at >= AUTO_RUN_DURATION:
+                self.end_auto_run()
+                return
+
             next_x = self.x + self.face_dir * AUTO_RUN_SPEED
             half_width = AUTO_RUN_SIZE // 2
             if next_x <= half_width:
@@ -139,6 +156,9 @@ class Boy:
 
     def reset_idle_timer(self):
         self.idle_started_at = time.monotonic()
+
+    def begin_auto_run(self):
+        self.auto_run_started_at = time.monotonic()
 
     def draw(self):
         if self.state == 'SLEEP':
