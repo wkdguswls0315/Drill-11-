@@ -6,11 +6,14 @@ import boy
 
 
 class FakeImage:
+    def __init__(self):
+        self.draw_calls = []
+
     def clip_composite_draw(self, *args):
         pass
 
     def clip_draw(self, *args):
-        pass
+        self.draw_calls.append(args)
 
 
 class BoyRunTests(unittest.TestCase):
@@ -53,6 +56,37 @@ class BoyRunTests(unittest.TestCase):
 
         self.send_key(boy.SDL_KEYUP, boy.SDLK_RIGHT)
         self.assertEqual(self.character.state, 'IDLE')
+
+    def test_autorun_state_class_moves_bounces_and_draws_larger(self):
+        self.send_key(boy.SDL_KEYDOWN, boy.SDLK_a)
+        self.assertIsInstance(self.character.auto_run, boy.AutoRun)
+        self.assertEqual(self.character.state, 'AUTORUN')
+
+        self.character.x = 721
+        self.character.update()
+        self.assertEqual(
+            self.character.x,
+            boy.SCREEN_WIDTH - boy.AUTO_RUN_SIZE // 2,
+        )
+        self.assertEqual(self.character.face_dir, -1)
+
+        self.character.draw()
+        self.assertEqual(
+            self.character.image.draw_calls[-1][-2:],
+            (boy.AUTO_RUN_SIZE, boy.AUTO_RUN_SIZE),
+        )
+
+    def test_autorun_returns_to_idle_after_five_seconds(self):
+        clock = SimpleNamespace(now=100.0)
+        with patch('boy.time.monotonic', side_effect=lambda: clock.now):
+            character = boy.Boy()
+            character.handle_event(
+                SimpleNamespace(type=boy.SDL_KEYDOWN, key=boy.SDLK_a)
+            )
+            clock.now += boy.AUTO_RUN_DURATION
+            character.update()
+            self.assertEqual(character.state, 'IDLE')
+            self.assertEqual(character.idle_started_at, clock.now)
 
 
 if __name__ == '__main__':

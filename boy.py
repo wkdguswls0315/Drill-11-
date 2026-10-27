@@ -21,13 +21,55 @@ AUTO_RUN_SIZE = 150
 AUTO_RUN_DURATION = 5
 
 
+class AutoRun:
+    def __init__(self, boy):
+        self.boy = boy
+        self.started_at = None
+
+    def enter(self):
+        self.started_at = time.monotonic()
+
+    def update(self):
+        if self.started_at is None:
+            raise RuntimeError('AutoRun must be entered before it is updated.')
+
+        if time.monotonic() - self.started_at >= AUTO_RUN_DURATION:
+            self.boy.end_auto_run()
+            return
+
+        next_x = self.boy.x + self.boy.face_dir * AUTO_RUN_SPEED
+        half_width = AUTO_RUN_SIZE // 2
+        if next_x <= half_width:
+            self.boy.x = half_width
+            self.boy.face_dir = 1
+        elif next_x >= SCREEN_WIDTH - half_width:
+            self.boy.x = SCREEN_WIDTH - half_width
+            self.boy.face_dir = -1
+        else:
+            self.boy.x = next_x
+        self.boy.frame = (self.boy.frame + 1) % 8
+
+    def draw(self):
+        bottom = 100 if self.boy.face_dir == 1 else 0
+        self.boy.image.clip_draw(
+            self.boy.frame * 100,
+            bottom,
+            100,
+            100,
+            self.boy.x,
+            self.boy.y,
+            AUTO_RUN_SIZE,
+            AUTO_RUN_SIZE,
+        )
+
+
 class Boy:
     def __init__(self):
         self.x, self.y = 400, 90
         self.frame = 0
         self.face_dir = 1
         self.idle_started_at = time.monotonic()
-        self.auto_run_started_at = None
+        self.auto_run = AutoRun(self)
         self.keys_down = set()
         self.image = load_image('animation_sheet.png')
         states = ['IDLE', 'RUN', 'SLEEP', 'AUTORUN']
@@ -83,21 +125,7 @@ class Boy:
             self.move_horizontally()
             self.frame = (self.frame + 1) % 8
         elif self.state == 'AUTORUN':
-            if time.monotonic() - self.auto_run_started_at >= AUTO_RUN_DURATION:
-                self.end_auto_run()
-                return
-
-            next_x = self.x + self.face_dir * AUTO_RUN_SPEED
-            half_width = AUTO_RUN_SIZE // 2
-            if next_x <= half_width:
-                self.x = half_width
-                self.face_dir = 1
-            elif next_x >= SCREEN_WIDTH - half_width:
-                self.x = SCREEN_WIDTH - half_width
-                self.face_dir = -1
-            else:
-                self.x = next_x
-            self.frame = (self.frame + 1) % 8
+            self.auto_run.update()
 
     def move_horizontally(self):
         moving_left = SDLK_LEFT in self.keys_down
@@ -165,9 +193,13 @@ class Boy:
         self.idle_started_at = time.monotonic()
 
     def begin_auto_run(self):
-        self.auto_run_started_at = time.monotonic()
+        self.auto_run.enter()
 
     def draw(self):
+        if self.state == 'AUTORUN':
+            self.auto_run.draw()
+            return
+
         if self.state == 'SLEEP':
             bottom = 300 if self.face_dir == 1 else 200
             self.image.clip_composite_draw(
@@ -175,22 +207,10 @@ class Boy:
             )
             return
 
-        if self.state in ('RUN', 'AUTORUN'):
+        if self.state == 'RUN':
             bottom = 100 if self.face_dir == 1 else 0
         else:
             bottom = 300 if self.face_dir == 1 else 200
-        if self.state == 'AUTORUN':
-            self.image.clip_draw(
-                self.frame * 100,
-                bottom,
-                100,
-                100,
-                self.x,
-                self.y,
-                AUTO_RUN_SIZE,
-                AUTO_RUN_SIZE,
-            )
-        else:
-            self.image.clip_draw(
-                self.frame * 100, bottom, 100, 100, self.x, self.y
-            )
+        self.image.clip_draw(
+            self.frame * 100, bottom, 100, 100, self.x, self.y
+        )
